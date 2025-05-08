@@ -7,10 +7,11 @@ import (
 )
 
 func RegisterTaskRoutes(root_router *gin.Engine) {
-	root_router.GET("/tasks", getTasksHandler)
-	root_router.POST("/tasks", postTasksHandler)
-	root_router.PUT("/tasks/:id", putTaskHandler)
-	root_router.DELETE("/tasks/:id", deleteTaskHandler)
+	task_router := root_router.Group("/tasks")
+	task_router.GET("", getTasksHandler)
+	task_router.POST("", postTasksHandler)
+	task_router.PUT("/:id", putTaskHandler)
+	task_router.DELETE("/:id", deleteTaskHandler)
 }
 
 func getTasksHandler(ctx *gin.Context) {
