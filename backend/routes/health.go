@@ -1,15 +1,13 @@
 package routes
 
 import (
-	"net/http"
+	"backend/handlers"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterHealthRoutes(root_router *gin.Engine) {
-	root_router.GET("/health", healthHandler)
-}
-
-func healthHandler(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "Status OK!")
+func RegisterHealthRoutes(rootRouter *gin.Engine) {
+	healthRouter := rootRouter.Group("/health")
+	healthHandler := handlers.NewHealthHandler()
+	healthHandler.RegisterRoutes(healthRouter)
 }

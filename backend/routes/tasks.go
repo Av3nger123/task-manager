@@ -1,31 +1,18 @@
 package routes
 
 import (
-	"net/http"
+	"backend/handlers"
+	"backend/repositories"
+	"backend/services"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func RegisterTaskRoutes(root_router *gin.Engine) {
-	task_router := root_router.Group("/tasks")
-	task_router.GET("", getTasksHandler)
-	task_router.POST("", postTasksHandler)
-	task_router.PUT("/:id", putTaskHandler)
-	task_router.DELETE("/:id", deleteTaskHandler)
-}
-
-func getTasksHandler(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "Tasks")
-}
-
-func postTasksHandler(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "Tasks")
-}
-
-func putTaskHandler(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "Tasks")
-}
-
-func deleteTaskHandler(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "Tasks")
+func RegisterTasksRoutes(rootRouter *gin.Engine, db *gorm.DB) {
+	taskRouter := rootRouter.Group("/tasks")
+	taskRepository := repositories.NewTasksRepository(db)
+	taskService := services.NewTasksService(taskRepository)
+	taskHandler := handlers.NewTaskHandler(taskService)
+	taskHandler.RegisterRoutes(taskRouter)
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/config"
 	"backend/routes"
 	"fmt"
 	"net/http"
@@ -13,11 +14,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	db := config.InitDB()
+	rootRouter := gin.Default()
+	// Register Health Route handler
+	routes.RegisterHealthRoutes(rootRouter)
+	routes.RegisterTasksRoutes(rootRouter, db)
 
-	root_router := gin.Default()
-
-	routes.RegisterHealthRoutes(root_router)
-	routes.RegisterTaskRoutes(root_router)
-
-	root_router.Run(":8080")
+	rootRouter.Run(":8080")
 }
