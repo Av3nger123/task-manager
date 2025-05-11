@@ -29,15 +29,36 @@ import {
 import { toast } from "sonner";
 import { TaskForm } from "./tasks/task-form";
 import { Separator } from "./ui/separator";
+import PaginationControls from "./tasks/task-pagination";
+import { useQueryState } from "nuqs";
 
 export function TaskTable() {
 	const { getTasks, deleteTask, updateTask } = useTasks();
-	const [sortField, setSortField] = useState<keyof Task>("CreatedAt");
-	const [sortDirection] = useState<"asc" | "desc">("desc");
+	const [sortField, setSortField] = useState<keyof Task>("created_at");
+	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+	const [filters] = useQueryState("filters", {
+		defaultValue: "",
+	});
 
+	const [page] = useQueryState("page", {
+		defaultValue: 1,
+		parse: Number,
+	});
+
+	const [limit] = useQueryState("limit", {
+		defaultValue: 10,
+		parse: Number,
+	});
 	const { data: tasks, refetch } = useQuery({
-		queryKey: ["tasks"],
-		queryFn: () => getTasks(),
+		queryKey: ["tasks", filters, page, limit, sortDirection, sortField],
+		queryFn: () =>
+			getTasks(
+				filters,
+				page.toString(),
+				limit.toString(),
+				sortField,
+				sortDirection
+			),
 	});
 
 	const getSortIcon = (field: keyof Task) => {
@@ -45,7 +66,7 @@ export function TaskTable() {
 		return sortDirection === "asc" ? " ↑" : " ↓";
 	};
 
-  console.log("render")
+	console.log("render");
 	const onEdit = (id: number, data: TaskFormData) => {
 		const promise = updateTask(id, data.title, data.description, data.status);
 		toast.promise(promise, {
@@ -58,37 +79,46 @@ export function TaskTable() {
 		});
 	};
 
+	const onSort = (field: keyof Task) => {
+		if (field == sortField) {
+			setSortDirection(sortDirection == "asc" ? "desc" : "asc");
+		} else {
+			setSortField(field);
+			setSortDirection("asc");
+		}
+	};
+
 	return (
-		<div className="w-full overflow-auto rounded-md border">
-			<div className="p-2 border-b">
+		<div className="w-full overflow-auto rounded-md space-y-2">
+			<div className="p-2 border-b flex flex-col gap-2">
 				<Header title="Tasks" refetch={refetch} showCreateButton={true} />
 			</div>
-			<Table>
+			<Table className="border">
 				<TableHeader>
 					<TableRow>
 						<TableHead
 							className="w-[300px] cursor-pointer"
-							onClick={() => setSortField("title")}
+							onClick={() => onSort("title")}
 						>
 							Title {getSortIcon("title")}
 						</TableHead>
 						<TableHead
 							className="hidden md:table-cell cursor-pointer"
-							onClick={() => setSortField("description")}
+							onClick={() => onSort("description")}
 						>
 							Description {getSortIcon("description")}
 						</TableHead>
 						<TableHead
 							className="w-[120px] cursor-pointer"
-							onClick={() => setSortField("status")}
+							onClick={() => onSort("status")}
 						>
 							Status {getSortIcon("status")}
 						</TableHead>
 						<TableHead
 							className="w-[120px] hidden sm:table-cell cursor-pointer"
-							onClick={() => setSortField("CreatedAt")}
+							onClick={() => onSort("created_at")}
 						>
-							Created {getSortIcon("CreatedAt")}
+							Created {getSortIcon("created_at")}
 						</TableHead>
 						<TableHead className="w-[100px] text-right">Actions</TableHead>
 					</TableRow>
@@ -117,48 +147,54 @@ export function TaskTable() {
 									<TaskStatusBadge status={task.status} />
 								</TableCell>
 								<TableCell className="hidden sm:table-cell">
-									{format(new Date(task.CreatedAt), "MMM d, yyyy")}
+									{format(new Date(task.created_at), "MMM d, yyyy")}
 								</TableCell>
 								<TableCell className="text-right flex flex-row">
-                <Dialog>
-												<DialogTrigger asChild>
-													<Button variant={"ghost"} className="w-fit">
-														<Edit className="h-4 w-4" />
-													</Button>
-												</DialogTrigger>
-												<DialogContent className="sm:max-w-[425px]">
-													<DialogHeader>
-														<DialogTitle>Create Task</DialogTitle>
-														<DialogDescription>
-															Make changes to the tasks here. Click save when
-															you&apos;re done.
-														</DialogDescription>
-													</DialogHeader>
-													<TaskForm
-														onSubmit={(data: TaskFormData) =>
-															onEdit(task?.ID, data)
-														}
-														submitLabel="Edit Changes"
-                            defaultValues={{title:task.title,description:task.description,status:task.status}}
-													/>
-												</DialogContent>
-											</Dialog>
-                      <Separator orientation="vertical" className="h-full"/>
-											<Button variant={"ghost"}
-                        className="text-destructive w-fit"
-												onClick={() => {
-													deleteTask(task.ID);
-													refetch();
-												}}
-											>
-												<Trash2 className="h-4 w-4" />
+									<Dialog>
+										<DialogTrigger asChild>
+											<Button variant={"ghost"} className="w-fit">
+												<Edit className="h-4 w-4" />
 											</Button>
+										</DialogTrigger>
+										<DialogContent className="sm:max-w-[425px]">
+											<DialogHeader>
+												<DialogTitle>Create Task</DialogTitle>
+												<DialogDescription>
+													Make changes to the tasks here. Click save when
+													you&apos;re done.
+												</DialogDescription>
+											</DialogHeader>
+											<TaskForm
+												onSubmit={(data: TaskFormData) =>
+													onEdit(task?.ID, data)
+												}
+												submitLabel="Edit Changes"
+												defaultValues={{
+													title: task.title,
+													description: task.description,
+													status: task.status,
+												}}
+											/>
+										</DialogContent>
+									</Dialog>
+									<Separator orientation="vertical" className="h-full" />
+									<Button
+										variant={"ghost"}
+										className="text-destructive w-fit"
+										onClick={() => {
+											deleteTask(task.ID);
+											refetch();
+										}}
+									>
+										<Trash2 className="h-4 w-4" />
+									</Button>
 								</TableCell>
 							</TableRow>
 						))
 					)}
 				</TableBody>
 			</Table>
+			<PaginationControls totalCount={tasks?.meta?.total ?? 0} />
 		</div>
 	);
 }

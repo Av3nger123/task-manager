@@ -44,5 +44,9 @@ function Badge({
     />
   )
 }
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
 
+    
 export { Badge, badgeVariants }

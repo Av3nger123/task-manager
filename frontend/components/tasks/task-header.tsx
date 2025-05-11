@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, RefreshCcw } from "lucide-react";
 import {
 	Dialog,
 	DialogContent,
@@ -14,6 +14,8 @@ import { useTasks } from "@/hooks/use-tasks";
 import { TaskFormData } from "@/lib/types/tasks";
 import { toast } from "sonner";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import FilterDialog from "./task-filter";
+import { useQueryState } from "nuqs";
 
 interface HeaderProps {
 	title: string;
@@ -26,6 +28,8 @@ export function Header({ title, refetch, showCreateButton = true }: HeaderProps)
 
 	const {createTask} = useTasks()
 
+	const [_,setFilters] = useQueryState("filters")
+
 	const onCreate = (data:TaskFormData) => {
 		const promise = createTask(data.title,data.description)
 		toast.promise(promise,{"loading":"Creating...","success":()=>{refetch();return "Task Created"},"error":"Failed to create task"})
@@ -35,6 +39,9 @@ export function Header({ title, refetch, showCreateButton = true }: HeaderProps)
 			<div className="flex items-center space-x-2">
 				<h1 className="text-2xl font-bold">{title}</h1>
 			</div>
+			<div className="space-x-2">
+			<Button onClick ={()=> setFilters("")} size={"icon"}><RefreshCcw/></Button>
+			<FilterDialog />
 			{showCreateButton && (
 				<Dialog>
 					<DialogTrigger asChild>
@@ -58,6 +65,8 @@ export function Header({ title, refetch, showCreateButton = true }: HeaderProps)
 					</DialogContent>
 				</Dialog>
 			)}
+			</div>
+			
 		</div>
 	);
 }

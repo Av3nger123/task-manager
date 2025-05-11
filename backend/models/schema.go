@@ -8,10 +8,11 @@ import (
 
 type Task struct {
 	gorm.Model
-	Title        string `gorm:"not null" json:"title"`
-	Description  string `json:"description"`
-	Status       string `gorm:"default:draft" json:"status"`
-	AssignedUser uint   `json:"assigned_user"`
+	Title        string    `gorm:"not null" json:"title"`
+	Description  string    `json:"description"`
+	Status       string    `gorm:"default:draft" json:"status"`
+	AssignedUser uint      `json:"assigned_user"`
+	CreatedAt    time.Time `gorm:"column:created_at" json:"created_at"`
 }
 
 type TaskStatus struct {
