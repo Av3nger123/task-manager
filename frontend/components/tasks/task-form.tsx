@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import {  TaskFormData } from "@/lib/types/tasks";
 // Define form schema with zod
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  description: z.string().optional(),
+  description: z.string(),
   status: z.enum(["draft", "in-progress", "completed"], {
     required_error: "Please select a status",
   }),
@@ -34,7 +34,7 @@ const formSchema = z.object({
 
 interface TaskFormProps {
   defaultValues?: Partial<TaskFormData>;
-  onSubmit: (data: TaskFormData) => void;
+  onSubmit: SubmitHandler<{ title: string; status: "draft" | "in-progress" | "completed"; description: string }> ;
   submitLabel: string;
 }
 

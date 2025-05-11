@@ -28,10 +28,11 @@ export function Header({ title, refetch, showCreateButton = true }: HeaderProps)
 
 	const {createTask} = useTasks()
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_,setFilters] = useQueryState("filters")
 
-	const onCreate = (data:TaskFormData) => {
-		const promise = createTask(data.title,data.description)
+	const onCreate = ({ title, description }: TaskFormData) => {
+		const promise = createTask(title,description)
 		toast.promise(promise,{"loading":"Creating...","success":()=>{refetch();return "Task Created"},"error":"Failed to create task"})
 	}
 	return (

@@ -6,4 +6,8 @@ export interface Task {
 	created_at: Date;
 }
 
-export type TaskFormData = Pick<Task, "title" | "description" | "status">;
+export interface TaskFormData {
+	title: string;
+	status: "draft" | "in-progress" | "completed";
+	description: string; // Make description optional
+  }
