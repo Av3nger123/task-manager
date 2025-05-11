@@ -5,10 +5,10 @@ export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 type Headers = { [key:string]: string }
 
-const logout = () => {
+export const logout = () => {
 	console.log("Logging out ...");
 	localStorage.removeItem("session");
-	window.location.href = `/auths`;
+	window.location.href = `/auth`;
 };
 
 

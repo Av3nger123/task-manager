@@ -29,7 +29,7 @@ func (this *TasksHandler) getTasksHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	tasks, total, err := this.tasksService.GetTasks(taskFilter)
+	tasks, total, err := this.tasksService.GetTasks(ctx.GetUint("user_id"), taskFilter)
 	if err != nil {
 		ctx.String(http.StatusInternalServerError, "Failed to fetch tasks")
 		return
@@ -43,7 +43,7 @@ func (this *TasksHandler) postTasksHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := this.tasksService.CreateTask(task)
+	err := this.tasksService.CreateTask(ctx.GetUint("user_id"), task)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

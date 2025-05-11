@@ -18,13 +18,12 @@ import FilterDialog from "./task-filter";
 import { useQueryState } from "nuqs";
 
 interface HeaderProps {
-	title: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<any, Error>>;
 	showCreateButton?: boolean;
 }
 
-export function Header({ title, refetch, showCreateButton = true }: HeaderProps) {
+export function Header({ refetch, showCreateButton = true }: HeaderProps) {
 
 	const {createTask} = useTasks()
 
@@ -37,9 +36,6 @@ export function Header({ title, refetch, showCreateButton = true }: HeaderProps)
 	}
 	return (
 		<div className="flex items-center justify-between">
-			<div className="flex items-center space-x-2">
-				<h1 className="text-2xl font-bold">{title}</h1>
-			</div>
 			<div className="space-x-2">
 			<Button onClick ={()=> setFilters("")} size={"icon"}><RefreshCcw/></Button>
 			<FilterDialog />

@@ -14,10 +14,11 @@ func NewTasksService(taskRepository *repositories.TasksRepository) *TasksService
 	return &TasksService{taskRepository}
 }
 
-func (s *TasksService) CreateTask(task *models.CreateTaskInput) error {
+func (s *TasksService) CreateTask(userId uint, task *models.CreateTaskInput) error {
 	taskDto := &models.Task{
-		Title:       task.Title,
-		Description: task.Description,
+		Title:        task.Title,
+		Description:  task.Description,
+		AssignedUser: userId,
 	}
 	if task.Completed != nil {
 		task.Completed = task.Completed
@@ -25,7 +26,7 @@ func (s *TasksService) CreateTask(task *models.CreateTaskInput) error {
 	return s.taskRepository.CreateTask(taskDto)
 }
 
-func (s *TasksService) GetTasks(filter models.GetTaskQuery) ([]models.Task, int64, error) {
+func (s *TasksService) GetTasks(userId uint, filter models.GetTaskQuery) ([]models.Task, int64, error) {
 	filters := make(map[string]repositories.FilterCondition)
 	filterPairs := strings.Split(filter.Filters, ",")
 	for _, pair := range filterPairs {
@@ -41,7 +42,7 @@ func (s *TasksService) GetTasks(filter models.GetTaskQuery) ([]models.Task, int6
 		Limit:   filter.Limit,
 		Filters: filters,
 	}
-	return s.taskRepository.GetAllTasks(query)
+	return s.taskRepository.GetAllTasks(userId, query)
 }
 
 func (s *TasksService) GetTaskByID(id uint) (*models.Task, error) {

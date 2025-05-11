@@ -89,9 +89,15 @@ export function TaskTable() {
 	};
 
 	return (
-		<div className="w-full overflow-auto rounded-md space-y-2">
-			<div className="p-2 border-b flex flex-col gap-2">
-				<Header title="Tasks" refetch={refetch} showCreateButton={true} />
+		<div className="w-full overflow-auto rounded-md space-y-2 p-2">
+			<div className="p-2 flex flex-row justify-end gap-2">
+				<div>
+				<Header refetch={refetch} showCreateButton={true} />
+				</div>
+				<div>
+				<PaginationControls totalCount={tasks?.meta?.total ?? 0} />
+
+				</div>
 			</div>
 			<Table className="border">
 				<TableHeader>
@@ -194,7 +200,6 @@ export function TaskTable() {
 					)}
 				</TableBody>
 			</Table>
-			<PaginationControls totalCount={tasks?.meta?.total ?? 0} />
 		</div>
 	);
 }

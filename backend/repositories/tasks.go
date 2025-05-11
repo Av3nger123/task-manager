@@ -33,7 +33,7 @@ func (r *TasksRepository) CreateTask(task *models.Task) error {
 	return r.db.Create(task).Error
 }
 
-func (r *TasksRepository) GetAllTasks(filter TaskQuery) ([]models.Task, int64, error) {
+func (r *TasksRepository) GetAllTasks(userId uint, filter TaskQuery) ([]models.Task, int64, error) {
 	var tasks []models.Task
 	query := r.db.Model(&tasks)
 
@@ -82,7 +82,7 @@ func (r *TasksRepository) GetAllTasks(filter TaskQuery) ([]models.Task, int64, e
 	}
 	offset := (page - 1) * limit
 
-	err := query.Limit(limit).Offset(offset).Find(&tasks).Error
+	err := query.Where("assigned_user = ?", userId).Limit(limit).Offset(offset).Find(&tasks).Error
 	return tasks, total, err
 }
 
