@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"backend/middleware"
 	"backend/models"
 	"backend/services"
 	"backend/utils"
@@ -14,6 +15,7 @@ type TasksHandler struct {
 }
 
 func (this *TasksHandler) RegisterRoutes(router *gin.RouterGroup) {
+	router.Use(middleware.AuthMiddleware())
 	router.GET("", this.getTasksHandler)
 	router.POST("", this.postTasksHandler)
 	router.PUT("/:id", this.putTaskHandler)

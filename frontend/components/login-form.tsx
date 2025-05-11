@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuthentication } from "@/hooks/use-auth"
 import { toast } from "sonner"
-import { Session, useAuth } from "@/lib/context/auth"
+import { useAuth } from "@/lib/context/auth"
 import { useRouter } from "next/navigation"
 
 export function LoginForm({
@@ -36,8 +36,8 @@ export function LoginForm({
 
     try {
       const promise = await login(email, password)
-      toast.promise(promise,{"loading":"Authenticating",success:(response:Session) => {
-        addSession(response)
+      toast.promise(promise,{"loading":"Authenticating...",success:(response:{token:string}) => {
+        addSession(response.token)
         router.push("/")
         return "Login Successful"
       },"error":"Failed to login"})

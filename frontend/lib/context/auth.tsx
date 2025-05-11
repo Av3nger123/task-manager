@@ -3,25 +3,21 @@ import { useState, useEffect, useContext, createContext } from 'react';
 
 // Define the shape of the authentication context
 interface AuthContextType {
-  session: Session | null;
-  addSession: (session: Session) => void;
+  session: string | null;
+  addSession: (session: string) => void;
   clearSession: () => void;
   isAuthenticated: boolean;
 }
 
 // Define a User type (customize as per your app's requirements)
-export interface Session {
-  token: string;
-}
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [session, setSession] = useState<Session|null>(null);
+  const [session, setSession] = useState<string|null>(null);
 
-  const addSession = (session: Session) => {
+  const addSession = (session: string) => {
     setSession(session);
-    localStorage.setItem('session', JSON.stringify(session));
+    localStorage.setItem('session', session)
   };
 
   const clearSession = () => {
@@ -32,9 +28,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isAuthenticated = !!session;
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('session');
-    if (storedUser) {
-      addSession(JSON.parse(storedUser));
+    const session = localStorage.getItem('session');
+    if (session) {
+      addSession(session);
     }
   }, []);
 

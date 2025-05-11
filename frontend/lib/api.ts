@@ -7,16 +7,14 @@ type Headers = { [key:string]: string }
 
 const logout = () => {
 	console.log("Logging out ...");
-	sessionStorage.removeItem("session");
-	window.location.href = `/login?ref=${window.location.pathname != "login" ? window.location.pathname : ""}`;
+	localStorage.removeItem("session");
+	window.location.href = `/auths`;
 };
 
+
 export async function get(url: string, headers: Headers = {}) {
-	const token = sessionStorage.getItem("session");
-	if (token) {
-		headers["Authorization"] = `Bearer ${token}`;
-	}
 	try {
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
 		const response = await axios.get(url, {
 			headers: { ...headers, "Content-Type": "application/json" },
 		});
@@ -25,17 +23,16 @@ export async function get(url: string, headers: Headers = {}) {
 		if (axios.isAxiosError(err) && err.response?.status == 403) {
 			logout();
 		} else {
+			console.log(err)
 			throw err;
 		}
 	}
 }
 
 export async function del(url: string, body: string, headers: Headers = {}) {
-	const token = sessionStorage.getItem("session");
-	if (token) {
-		headers["Authorization"] = `Bearer ${token}`;
-	}
+
 	try {
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
 		const response = await axios.delete(url, {
 			data: body,
 			headers,
@@ -54,11 +51,9 @@ export async function del(url: string, body: string, headers: Headers = {}) {
 }
 
 export async function post(url: string, body: string, headers: Headers = {}) {
-	const token = sessionStorage.getItem("session");
-	if (token) {
-		headers["Authorization"] = `Bearer ${token}`;
-	}
 	try {
+		console.log()
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
 		const response = await axios.post(url, body, {
 			headers: {
 				"Content-Type": "application/json",
@@ -78,11 +73,8 @@ export async function post(url: string, body: string, headers: Headers = {}) {
 	}
 }
 export async function put(url: string, body: string, headers: Headers = {}) {
-	const token = sessionStorage.getItem("session");
-	if (token) {
-		headers["Authorization"] = `Bearer ${token}`;
-	}
 	try {
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
 		const response = await axios.put(url, body, {
 			headers: {
 				"Content-Type": "application/json",
@@ -102,7 +94,7 @@ export async function put(url: string, body: string, headers: Headers = {}) {
 	}
 }
 export async function patch(url: string, body: string, headers: Headers = {}) {
-	const token = sessionStorage.getItem("session");
+	const token = localStorage.getItem("session");
 	if (token) {
 		headers["Authorization"] = `Bearer ${token}`;
 	}
