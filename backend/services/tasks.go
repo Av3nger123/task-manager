@@ -19,10 +19,9 @@ func (s *TasksService) CreateTask(userId uint, task *models.CreateTaskInput) err
 		Title:        task.Title,
 		Description:  task.Description,
 		AssignedUser: userId,
+		DueDate:      task.DueDate,
 	}
-	if task.Completed != nil {
-		task.Completed = task.Completed
-	}
+
 	return s.taskRepository.CreateTask(taskDto)
 }
 
@@ -30,7 +29,7 @@ func (s *TasksService) GetTasks(userId uint, filter models.GetTaskQuery) ([]mode
 	filters := make(map[string]repositories.FilterCondition)
 	filterPairs := strings.Split(filter.Filters, ",")
 	for _, pair := range filterPairs {
-		keyValue := strings.Split(pair, ":")
+		keyValue := strings.Split(pair, "~")
 		if len(keyValue) == 3 {
 			filters[keyValue[0]] = repositories.FilterCondition{Operator: keyValue[1], Value: keyValue[2]}
 		}
@@ -57,7 +56,8 @@ func (s *TasksService) UpdateTask(id uint, updated *models.UpdateTaskInput) erro
 
 	task.Title = updated.Title
 	task.Description = updated.Description
-	task.Status = *updated.Status
+	task.Status = updated.Status
+	task.DueDate = updated.DueDate
 
 	return s.taskRepository.UpdateTask(task)
 }

@@ -1,15 +1,19 @@
 package models
 
+import "time"
+
 type CreateTaskInput struct {
-	Title       string `json:"title" binding:"required,min=3,max=100"`
-	Description string `json:"description" binding:"omitempty,max=500"`
-	Completed   *bool  `json:"completed"` // optional on create
+	Title       string    `json:"title" binding:"required,min=3,max=100"`
+	Description string    `json:"description" binding:"omitempty,max=500"`
+	Status      string    `json:"status"`
+	DueDate     time.Time `json:"due_date" binding:"required"`
 }
 
 type UpdateTaskInput struct {
-	Title       string  `json:"title" binding:"omitempty,min=3,max=100"`
-	Description string  `json:"description" binding:"omitempty,max=500"`
-	Status      *string `json:"status"`
+	Title       string    `json:"title" binding:"omitempty,min=3,max=100"`
+	Description string    `json:"description" binding:"omitempty,max=500"`
+	Status      string    `json:"status"`
+	DueDate     time.Time `json:"due_date"`
 }
 
 type GetTaskQuery struct {

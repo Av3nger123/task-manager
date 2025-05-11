@@ -32,6 +32,8 @@ import { Separator } from "./ui/separator";
 import PaginationControls from "./tasks/task-pagination";
 import { useQueryState } from "nuqs";
 
+import { isEmpty } from "lodash";
+
 export function TaskTable() {
 	const { getTasks, deleteTask, updateTask } = useTasks();
 	const [sortField, setSortField] = useState<keyof Task>("created_at");
@@ -130,6 +132,12 @@ export function TaskTable() {
 						</TableHead>
 						<TableHead
 							className="w-[120px] hidden sm:table-cell cursor-pointer"
+							onClick={() => onSort("due_date")}
+						>
+							Due Date {getSortIcon("due_date")}
+						</TableHead>
+						<TableHead
+							className="w-[120px] hidden sm:table-cell cursor-pointer"
 							onClick={() => onSort("created_at")}
 						>
 							Created {getSortIcon("created_at")}
@@ -141,7 +149,9 @@ export function TaskTable() {
 					{tasks?.data?.length === 0 ? (
 						<TableRow>
 							<TableCell colSpan={5} className="h-24 text-center">
-								No tasks found. Create a new task to get started.
+								{isEmpty(filters)
+									? "No tasks found. Create a new task to get started."
+									: "No tasks match your current filters. Try adjusting or clearing them to see more results."}
 							</TableCell>
 						</TableRow>
 					) : (
@@ -159,6 +169,9 @@ export function TaskTable() {
 								</TableCell>
 								<TableCell>
 									<TaskStatusBadge status={task.status} />
+								</TableCell>
+								<TableCell className="hidden sm:table-cell">
+									{format(new Date(task?.due_date), "MMM d, yyyy")}
 								</TableCell>
 								<TableCell className="hidden sm:table-cell">
 									{format(new Date(task.created_at), "MMM d, yyyy")}

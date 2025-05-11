@@ -31,8 +31,8 @@ export function Header({ refetch, showCreateButton = true }: HeaderProps) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_, setFilters] = useQueryState("filters");
 
-	const onCreate = ({ title, description }: TaskFormData) => {
-		const promise = createTask(title, description);
+	const onCreate = ({ title, description, dueDate }: TaskFormData) => {
+		const promise = createTask(title, description, dueDate);
 		toast.promise(promise, {
 			loading: "Creating...",
 			success: () => {

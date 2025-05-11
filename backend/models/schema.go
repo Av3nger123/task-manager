@@ -13,6 +13,7 @@ type Task struct {
 	Status       string    `gorm:"default:draft" json:"status"`
 	AssignedUser uint      `json:"assigned_user"`
 	CreatedAt    time.Time `gorm:"column:created_at" json:"created_at"`
+	DueDate      time.Time `gorm:"column:due_date" json:"due_date"`
 }
 
 type TaskStatus struct {

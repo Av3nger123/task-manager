@@ -4,10 +4,12 @@ export interface Task {
 	description: string;
 	status: "draft" | "in-progress" | "completed";
 	created_at: Date;
+	due_date: Date;
 }
 
 export interface TaskFormData {
 	title: string;
 	status: "draft" | "in-progress" | "completed";
-	description: string; // Make description optional
-  }
+	description: string;
+	dueDate: Date;
+}
