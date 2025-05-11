@@ -19,6 +19,8 @@ func main() {
 	// Register Health Route handler
 	routes.RegisterHealthRoutes(rootRouter)
 	routes.RegisterTasksRoutes(rootRouter, db)
+	routes.RegisterAuthRoutes(rootRouter, db)
+	routes.RegisterUserRoutes(rootRouter, db)
 
 	rootRouter.Run(":8080")
 }

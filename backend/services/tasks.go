@@ -56,7 +56,7 @@ func (s *TasksService) UpdateTask(id uint, updated *models.UpdateTaskInput) erro
 
 	task.Title = updated.Title
 	task.Description = updated.Description
-	task.Completed = *updated.Completed
+	task.Status = *updated.Status
 
 	return s.taskRepository.UpdateTask(task)
 }
