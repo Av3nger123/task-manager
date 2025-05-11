@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/config"
+	"backend/middleware"
 	"backend/routes"
 	"fmt"
 	"net/http"
@@ -16,6 +17,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	db := config.InitDB()
 	rootRouter := gin.Default()
+
+	rootRouter.Use(middleware.CorsMiddleware())
+
 	// Register Health Route handler
 	routes.RegisterHealthRoutes(rootRouter)
 	routes.RegisterTasksRoutes(rootRouter, db)
