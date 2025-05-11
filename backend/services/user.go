@@ -4,6 +4,7 @@ import (
 	"backend/models"
 	"backend/repositories"
 	"backend/utils"
+	"errors"
 )
 
 type UserService struct {
@@ -23,7 +24,7 @@ func (s *UserService) Register(user *models.User) error {
 func (s *UserService) Login(email, password string) (string, error) {
 	user, err := s.repo.FindByEmail(email)
 	if err != nil || !utils.CheckPasswordHash(password, user.Password) {
-		return "", err
+		return "", errors.New("Invalid Credentials")
 	}
 	return utils.GenerateJWT(user.ID)
 }

@@ -3,6 +3,7 @@ package handlers
 import (
 	"backend/models"
 	"backend/services"
+	"backend/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,8 @@ func (h *AuthHandler) RegisterRoutes(router *gin.RouterGroup) {
 func (h *AuthHandler) Register(c *gin.Context) {
 	var input models.RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		validationErrors := utils.MapValidationErrors(err)
+		c.JSON(http.StatusBadRequest, gin.H{"errors": validationErrors})
 		return
 	}
 	user := &models.User{Name: input.Name, Email: input.Email, Password: input.Password}
@@ -38,7 +40,8 @@ func (h *AuthHandler) Register(c *gin.Context) {
 func (h *AuthHandler) Login(c *gin.Context) {
 	var input models.LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		validationErrors := utils.MapValidationErrors(err)
+		c.JSON(http.StatusBadRequest, gin.H{"errors": validationErrors})
 		return
 	}
 	token, err := h.service.Login(input.Email, input.Password)

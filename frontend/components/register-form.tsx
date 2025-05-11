@@ -36,15 +36,13 @@ export function SignupForm({
         toast.error("Passwords do not match")
         return
       }
-      try {
-        const promise = await register(name, email, password1)
+        const promise = register(name, email, password1)
         toast.promise(promise,{"loading":"Registering",success:() => {
           router.push("/auth")
           return "Registration Successful"
-        },"error":"Failed to Register"})
-      } catch (error) {
-        console.error("Login failed:", error)
-      }
+        },"error": (err) => {
+          return err?.response?.data?.error ?? "Failed to register "
+        }})
     }
   
 
@@ -62,15 +60,15 @@ export function SignupForm({
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="name">First name</Label>
-          <Input id="name" placeholder="Tyler" type="text" />
+          <Input id="name" placeholder="Tyler" type="text" required/>
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" placeholder="projectmayhem@fc.com" type="email"required />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password1">Password</Label>
-          <Input id="password1" placeholder="••••••••" type="password1" />
+          <Input id="password1" placeholder="••••••••" type="password1" required/>
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
           <Label htmlFor="password2">Re enter password</Label>
@@ -78,6 +76,7 @@ export function SignupForm({
             id="password2"
             placeholder="••••••••"
             type="password2"
+            required
           />
         </LabelInputContainer>
 
@@ -88,6 +87,12 @@ export function SignupForm({
           Sign up &rarr;
           <BottomGradient />
         </button>
+        <div className="mt-4 text-center text-sm">
+							Already have an account?{" "}
+							<a href="/auth" className="underline underline-offset-4">
+								Login
+							</a>
+						</div>
       </form>
         </CardContent>
       </Card>

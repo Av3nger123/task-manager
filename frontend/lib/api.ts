@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-type Headers = { [key:string]: string }
+type Headers = { [key: string]: string };
 
 export const logout = () => {
 	console.log("Logging out ...");
@@ -11,10 +11,9 @@ export const logout = () => {
 	window.location.href = `/auth`;
 };
 
-
 export async function get(url: string, headers: Headers = {}) {
 	try {
-		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`;
 		const response = await axios.get(url, {
 			headers: { ...headers, "Content-Type": "application/json" },
 		});
@@ -23,16 +22,15 @@ export async function get(url: string, headers: Headers = {}) {
 		if (axios.isAxiosError(err) && err.response?.status == 403) {
 			logout();
 		} else {
-			console.log(err)
+			console.log(err);
 			throw err;
 		}
 	}
 }
 
 export async function del(url: string, body: string, headers: Headers = {}) {
-
 	try {
-		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`;
 		const response = await axios.delete(url, {
 			data: body,
 			headers,
@@ -52,8 +50,8 @@ export async function del(url: string, body: string, headers: Headers = {}) {
 
 export async function post(url: string, body: string, headers: Headers = {}) {
 	try {
-		console.log()
-		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
+		console.log();
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`;
 		const response = await axios.post(url, body, {
 			headers: {
 				"Content-Type": "application/json",
@@ -68,13 +66,14 @@ export async function post(url: string, body: string, headers: Headers = {}) {
 		if (axios.isAxiosError(err) && err.response?.status == 403) {
 			logout();
 		} else {
+			console.log("Throwing error", err);
 			throw err;
 		}
 	}
 }
 export async function put(url: string, body: string, headers: Headers = {}) {
 	try {
-		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`
+		headers["Authorization"] = `Bearer ${localStorage.getItem("session")}`;
 		const response = await axios.put(url, body, {
 			headers: {
 				"Content-Type": "application/json",

@@ -38,7 +38,7 @@ export default function RootLayout({
 			</QueryClientProvider>
           
         </AuthProvider>
-        <Toaster />
+        <Toaster richColors/>
 
       </body>
     </html>

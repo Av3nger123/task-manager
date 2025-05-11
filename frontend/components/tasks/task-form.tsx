@@ -26,7 +26,7 @@ import {  TaskFormData } from "@/lib/types/tasks";
 // Define form schema with zod
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  description: z.string(),
+  description: z.string().min(1, { message :"Description is requires" }),
   status: z.enum(["draft", "in-progress", "completed"], {
     required_error: "Please select a status",
   }),

@@ -88,16 +88,24 @@ export function TaskTable() {
 		}
 	};
 
-	return (
-		<div className="w-full overflow-auto rounded-md space-y-2 p-2">
-			<div className="p-2 flex flex-row justify-end gap-2">
-				<div>
-				<Header refetch={refetch} showCreateButton={true} />
-				</div>
-				<div>
-				<PaginationControls totalCount={tasks?.meta?.total ?? 0} />
+	const onDelete = (id: number) => {
+		const promise = deleteTask(id);
+		toast.promise(promise, {
+			loading: "Deleteing",
+			success: () => {
+				refetch();
+				return "Task Deleted Successfully";
+			},
+			error: () => {
+				return "task deletion failed";
+			},
+		});
+	};
 
-				</div>
+	return (
+		<div className="px-15 flex flex-col item-center justify-center w-full overflow-auto rounded-md space-y-2 p-2">
+			<div className="p-2">
+				<Header refetch={refetch} showCreateButton={true} />
 			</div>
 			<Table className="border">
 				<TableHeader>
@@ -187,10 +195,7 @@ export function TaskTable() {
 									<Button
 										variant={"ghost"}
 										className="text-destructive w-fit"
-										onClick={() => {
-											deleteTask(task.ID);
-											refetch();
-										}}
+										onClick={() => onDelete(task.ID)}
 									>
 										<Trash2 className="h-4 w-4" />
 									</Button>
@@ -200,6 +205,7 @@ export function TaskTable() {
 					)}
 				</TableBody>
 			</Table>
+			<PaginationControls totalCount={tasks?.meta?.total ?? 0} />
 		</div>
 	);
 }
