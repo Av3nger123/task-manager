@@ -77,7 +77,8 @@ Task Manager is a full-stack application designed to help users manage their tas
 - Implement a Kanban board in the UI for better task visualization and management.
 - Add support for customizable and dynamic task statuses.
 - Enable email notifications to inform users when a task is assigned or updated.
-- Provide multimedia support, along with task history and a comments section for better collaboration.
+- Provide multimedia support, Labeling, along with task history and a comments section for better collaboration.
+- Hierarchy between tasks (Parent / Child)
 
 ### My choice of Enhancements
 
