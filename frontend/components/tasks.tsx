@@ -206,7 +206,7 @@ export function TaskTable() {
 													title: task.title,
 													description: task.description,
 													status: task.status,
-													dueDate: task.due_date,
+													dueDate: new Date(task.due_date),
 												}}
 											/>
 										</DialogContent>
