@@ -70,7 +70,13 @@ export function TaskTable() {
 
 	console.log("render");
 	const onEdit = (id: number, data: TaskFormData) => {
-		const promise = updateTask(id, data.title, data.description, data.status);
+		const promise = updateTask(
+			id,
+			data.title,
+			data.description,
+			data.status,
+			data.dueDate
+		);
 		toast.promise(promise, {
 			loading: "Updating...",
 			success: () => {
@@ -200,6 +206,7 @@ export function TaskTable() {
 													title: task.title,
 													description: task.description,
 													status: task.status,
+													dueDate: task.due_date,
 												}}
 											/>
 										</DialogContent>

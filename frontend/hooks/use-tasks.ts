@@ -33,11 +33,12 @@ export const useTasks = () => {
 		id: number,
 		title: string,
 		description: string,
-		status: string
+		status: string,
+		dueDate: Date
 	) => {
 		return await put(
 			`${BACKEND_URL}/tasks/${id}`,
-			JSON.stringify({ title, description, status })
+			JSON.stringify({ title, description, status, due_date: dueDate })
 		);
 	};
 	const deleteTask = async (id: number) => {
